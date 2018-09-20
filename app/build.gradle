@@ -14,6 +14,7 @@ buildscript {
 android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
+    flavorDimensions "default"
 
     defaultConfig {
         applicationId "com.udacity.gradle.builditbigger"
@@ -33,7 +34,18 @@ android {
 
         debug{
         }
-}
+
+    }
+
+        productFlavors{
+            free {
+                applicationId "com.udacity.gradle.builditbigger.free"
+            }
+            paid {
+                applicationId "com.udacity.gradle.builditbigger.paid"
+            }
+        }
+
 }
 
 
