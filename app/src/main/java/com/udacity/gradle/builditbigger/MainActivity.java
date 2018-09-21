@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.print(e);
         }
         Intent intent = new Intent(this, JokeActivity.class);
-        intent.putExtra("joke", reply);
+        intent.putExtra(getString(R.string.joke_extra), reply);
         startActivity(intent);
     }
 

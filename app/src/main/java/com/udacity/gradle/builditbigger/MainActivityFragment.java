@@ -31,9 +31,7 @@ public class MainActivityFragment extends Fragment {
 
         if (BuildConfig.FLAVOR.equals("paid")){
             mAdView.setVisibility(View.GONE);
-            Log.i("MyFragment", "I'm paid version");
         } else {
-            Log.i("MyFragment", "I'm free version");
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .build();
