@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public void tellJoke(View view) {
         String reply = "";
         try {
-            reply =  new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred")).get();
+            reply =  new EndpointsAsyncTask().execute(getApplicationContext()).get();
         } catch (Exception e){
             System.out.print(e);
         }
