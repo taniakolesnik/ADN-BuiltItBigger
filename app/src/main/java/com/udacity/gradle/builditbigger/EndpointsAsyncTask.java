@@ -1,29 +1,33 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
-
 import java.io.IOException;
 
-import uk.co.taniakolesnik.jokeandroidlibrary.JokeActivity;
 
 /**
  * Created by tetianakolesnik on 19/09/2018.
  */
 
-public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
+public class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     private static MyApi myApiService = null;
-    private Context context;
+    private AsyncTaskListener mAsyncTaskListener;
+
+    public interface AsyncTaskListener {
+        void onTaskComplete(String joke);
+    }
+
+    public void setAsyncTaskListener(AsyncTaskListener asyncTaskListener) {
+        mAsyncTaskListener = asyncTaskListener;
+    }
 
     @Override
-    protected String doInBackground(Context... params) {
-        if(myApiService == null) {  // Only do this once
+    protected String doInBackground(Void... params) {
+        if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
@@ -36,27 +40,22 @@ public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
-
             myApiService = builder.build();
         }
-
-        context = params[0];
 
         try {
             return myApiService.getJoke().execute().getData();
         } catch (IOException e) {
-           // return context.getString(R.string.no_joke_message);
-            return e.toString();
+            return "No jokes today. Sorry.";
         }
     }
 
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        Intent intent = new Intent(context, JokeActivity.class);
-        intent.putExtra(context.getString(R.string.joke_extra), s);
-        context.startActivity(intent);
+        if (mAsyncTaskListener != null) {
+            mAsyncTaskListener.onTaskComplete(s);
+        }
     }
-
 
 }
